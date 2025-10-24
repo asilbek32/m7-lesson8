@@ -2,6 +2,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import axios from "axios";
 
 function LoginForm() {
   const schema = Yup.object().shape({
@@ -22,8 +23,23 @@ function LoginForm() {
   });
 
   const submit = (data) => {
-    console.log(data);
-    reset(); 
+    axios
+      .get("https://68b6bfc073b3ec66cec28ce1.mockapi.io/useForm")
+      .then((res) => {
+        const user = res.data.find(
+          (user) =>
+            user.username === data.username &&
+            user.email === data.email &&
+            user.password === data.password
+        );
+        if (user) {
+          alert(`Name: ${user.name}, Surname: ${user.surname}, Phone: ${user.phoneNumber}`);
+        } else {
+          alert("Foydalanuvchi topilmadi");
+        }
+      })
+      .catch((error) => console.log(error));
+    reset();
   };
 
   return (
@@ -87,6 +103,8 @@ function LoginForm() {
           </button>
         </div>
       </form>
+
+     
     </div>
   );
 }
